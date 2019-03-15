@@ -1,29 +1,4 @@
-const csv = require('csvtojson')
-let deliveriesJson = [];
-let matchesJson = [];
-csv()
-    .fromFile('data/matches.csv')
-    .then((jsonObj) => {
-        matchesJson = jsonObj;
-    }).then(() => {
-        csv()
-            .fromFile('data/deliveries.csv')
-            .then((jsonObj1) => {
-                deliveriesJson = jsonObj1;
-            }).then(() => {
-                // un comment below lines to test each function
-                //console.log(getNoOfMatchesPlayed(matchesJson));
-                //console.log(getNoOfMatchesWonPerTeamPerYear(matchesJson));
-                //console.log(getExtraRunsPerTeamForYear(matchesJson, deliveriesJson, '2016'));
-                console.log(getBowlersEconomyForYear(matchesJson, deliveriesJson, '2015'));
-                //console.log(getBowlerStatsForYear(matchesJson, deliveriesJson, '2015'));
-
-
-
-
-            })
-    })
-
+//get number of matches played per year of all the years in IPL
 function getNoOfMatchesPlayed(matches) {
     return matches.reduce((numberMatches, match) => {
         if (!numberMatches[match.season]) {
@@ -36,6 +11,7 @@ function getNoOfMatchesPlayed(matches) {
     }, {})
 }
 
+//matches won of all teams over all the years of IPL
 function getNoOfMatchesWonPerTeamPerYear(matches) {
     return matches.reduce((matchesWon, match) => {
         if (match.result != 'no result') {
@@ -59,6 +35,7 @@ function getNoOfMatchesWonPerTeamPerYear(matches) {
     }, {})
 }
 
+//the extra runs conceded per team for a given year
 function getExtraRunsPerTeamForYear(matches, deliveries, year) {
     let matchesYear = getMatchesOfAYear(matches, year)
 
@@ -77,41 +54,8 @@ function getExtraRunsPerTeamForYear(matches, deliveries, year) {
     }, {})
 }
 
-// function getBowlersEconomyForYear(matches, deliveries, year) {
-//     let matchesForYear = {}
-//     let bowlerStats = {}
-//     let bowlersEconomy = {}
-//     matches.map((match) => {
-//         if (match.season == year)
-//             matchesForYear[match.id] = match.season
-//     })
-//     deliveries.map((delivery) => {
-//         if (matchesForYear[delivery.match_id]) {
-//             if (!bowlerStats[delivery.bowler]) {
-//                 bowlerStats[delivery.bowler] = {}
-//                 bowlerStats[delivery.bowler]["runs"] = parseInt(delivery["batsman_runs"]) + parseInt(delivery["wide_runs"]) + parseInt(delivery["noball_runs"])
-//                 if (delivery["wide_runs"] === '0' && delivery["noball_runs"] === '0') {
-//                     bowlerStats[delivery.bowler]["balls"] = 1
-//                 }
-//                 else { bowlerStats[delivery.bowler]["balls"] = 0 }
-//                 bowlersEconomy[delivery.bowler] = bowlerStats[delivery.bowler]["runs"] / bowlerStats[delivery.bowler]["balls"] * 6
-//             }
-//             else {
-//                 bowlerStats[delivery.bowler]["runs"] += parseInt(delivery["batsman_runs"]) + parseInt(delivery["wide_runs"]) + parseInt(delivery["noball_runs"])
-//                 if (delivery["wide_runs"] === '0' && delivery["noball_runs"] === '0') {
-//                     bowlerStats[delivery.bowler]["balls"] += 1
-//                 }
-//                 bowlersEconomy[delivery.bowler] = bowlerStats[delivery.bowler]["runs"] / bowlerStats[delivery.bowler]["balls"] * 6
-//             }
 
-//         }
-//     })
-//     return bowlersEconomy
-// }
-
-
-
-
+//get data of matches played for a given year
 function getMatchesOfAYear(matches, year) {
     return matches.reduce((matchesYear, match) => {
         if (match.season == year)
@@ -120,6 +64,7 @@ function getMatchesOfAYear(matches, year) {
     }, {})
 }
 
+//get the total runs given and total balls bowled by a bowler for a given year
 function getBowlerStatsForYear(matches, deliveries, year) {
 
     let matchesForYear = getMatchesOfAYear(matches, year)
@@ -133,14 +78,14 @@ function getBowlerStatsForYear(matches, deliveries, year) {
                     bowlerStats[delivery.bowler]["balls"] = 1
                 }
                 else { bowlerStats[delivery.bowler]["balls"] = 0 }
-                //bowlersEconomy[delivery.bowler] = bowlerStats[delivery.bowler]["runs"] / bowlerStats[delivery.bowler]["balls"] * 6
+
             }
             else {
                 bowlerStats[delivery.bowler]["runs"] += parseInt(delivery["batsman_runs"]) + parseInt(delivery["wide_runs"]) + parseInt(delivery["noball_runs"])
                 if (delivery["wide_runs"] === '0' && delivery["noball_runs"] === '0') {
                     bowlerStats[delivery.bowler]["balls"] += 1
                 }
-                //bowlersEconomy[delivery.bowler] = bowlerStats[delivery.bowler]["runs"] / bowlerStats[delivery.bowler]["balls"] * 6
+
             }
 
         }
@@ -149,13 +94,9 @@ function getBowlerStatsForYear(matches, deliveries, year) {
 
 }
 
+//get the economy rate of each bowler for a given year
 function getBowlersEconomyForYear(matches, deliveries, year) {
     let bowlerStats = getBowlerStatsForYear(matches, deliveries, year)
-
-    // return Object.keys(bowlerStats).reduce((bowlerEcon, bowler) => {
-    //     bowlerEcon[bowler] = bowlerStats[bowler][runs] / bowlerStats[bowler][balls] * 6
-    //     return bowlerEcon
-    // }, {})
     let bowlerEcon = {}
     Object.keys(bowlerStats).map((bowler) => {
         bowlerEcon[bowler] = {}
@@ -163,22 +104,6 @@ function getBowlersEconomyForYear(matches, deliveries, year) {
         return bowlerEcon
     })
     return bowlerEcon
-
-    //return bowlerStats
 }
 
-
-
-
-
-
-
-
-
-
-
-
-// export const getNoOfMatchesPlayed = () => {};
-// export const getNoOfMatchesWonPerTeamPerYear = () => {};
-// export const getExtraRunsPerTeamForYear = () => {};
-// export const getBowlersEconomyForYear = () => {};
+module.exports = { getNoOfMatchesPlayed, getNoOfMatchesWonPerTeamPerYear, getExtraRunsPerTeamForYear, getBowlersEconomyForYear }
