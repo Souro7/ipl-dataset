@@ -1,4 +1,5 @@
 const iplModule = require('./ipl')
+const fs = require('fs')
 const csv = require('csvtojson')
 let deliveriesJson = [];
 let matchesJson = [];
@@ -12,16 +13,27 @@ csv()
             .then((jsonObj1) => {
                 deliveriesJson = jsonObj1;
             }).then(() => {
-                //console.time('Test')
-                // un comment below lines to test each function
-                //console.log(iplModule.getNoOfMatchesPlayed(matchesJson));
-                //console.log(iplModule.getNoOfMatchesWonPerTeamPerYear(matchesJson));
-                //console.timeEnd('Test')
-                //console.log(iplModule.getExtraRunsPerTeamForYear(matchesJson, deliveriesJson, '2016'));
-                //console.log(iplModule.getBowlersEconomyForYear(matchesJson, deliveriesJson, '2015'));
+                //number of matches played
+                writeJSONFile("number_of_matches.json", JSON.stringify(iplModule.getNoOfMatchesPlayed(matchesJson), undefined, 2))
 
+                //number of matches won per team per year
+                writeJSONFile("matches_won_per_team.json", JSON.stringify(iplModule.getNoOfMatchesWonPerTeamPerYear(matchesJson), undefined, 2))
 
+                //get extra runs per team for a year
+                writeJSONFile("extra_runs_per_team.json", JSON.stringify(iplModule.getExtraRunsPerTeamForYear(matchesJson, deliveriesJson, '2016'), undefined, 2))
 
-
+                //get bowlers economy for a year
+                writeJSONFile("bowlers_economy.json", JSON.stringify(iplModule.getBowlersEconomyForYear(matchesJson, deliveriesJson, '2015'), undefined, 2))
             })
     })
+
+function writeJSONFile(path, data) {
+    fs.writeFile(path, data, 'utf8', function (err) {
+        if (err) {
+            console.log("An error occured while writing JSON Object to File.");
+            return console.log(err);
+        }
+
+        console.log("Output JSON file has been saved.");
+    })
+}
