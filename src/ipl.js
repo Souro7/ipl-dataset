@@ -97,13 +97,11 @@ function getBowlerStatsForYear(matches, deliveries, year) {
 //get the economy rate of each bowler for a given year
 function getBowlersEconomyForYear(matches, deliveries, year) {
     let bowlerStats = getBowlerStatsForYear(matches, deliveries, year)
-    let bowlerEcon = {}
-    Object.keys(bowlerStats).map((bowler) => {
+    return Object.keys(bowlerStats).reduce((bowlerEcon, bowler) => {
         bowlerEcon[bowler] = {}
         bowlerEcon[bowler] = bowlerStats[bowler]["runs"] / bowlerStats[bowler]["balls"] * 6
         return bowlerEcon
-    })
-    return bowlerEcon
+    }, {})
 }
 
 module.exports = { getNoOfMatchesPlayed, getNoOfMatchesWonPerTeamPerYear, getExtraRunsPerTeamForYear, getBowlersEconomyForYear }
