@@ -17,5 +17,8 @@
     "@babel/preset-env": "^7.3.4",
     "babel-jest": "^24.3.1",
     "jest": "^24.3.1"
+  },
+  "dependencies": {
+    "csvtojson": "^2.0.8"
   }
 }

@@ -14,16 +14,16 @@ csv()
                 deliveriesJson = jsonObj1;
             }).then(() => {
                 //number of matches played
-                writeJSONFile("number_of_matches.json", JSON.stringify(iplModule.getNoOfMatchesPlayed(matchesJson), undefined, 2))
+                writeJSONFile("data/number_of_matches.json", JSON.stringify(iplModule.getNoOfMatchesPlayed(matchesJson), undefined, 2))
 
                 //number of matches won per team per year
-                writeJSONFile("matches_won_per_team.json", JSON.stringify(iplModule.getNoOfMatchesWonPerTeamPerYear(matchesJson), undefined, 2))
+                writeJSONFile("data/matches_won_per_team.json", JSON.stringify(iplModule.getNoOfMatchesWonPerTeamPerYear(matchesJson), undefined, 2))
 
                 //get extra runs per team for a year
-                writeJSONFile("extra_runs_per_team.json", JSON.stringify(iplModule.getExtraRunsPerTeamForYear(matchesJson, deliveriesJson, '2016'), undefined, 2))
+                writeJSONFile("data/extra_runs_per_team.json", JSON.stringify(iplModule.getExtraRunsPerTeamForYear(matchesJson, deliveriesJson, '2016'), undefined, 2))
 
                 //get bowlers economy for a year
-                writeJSONFile("bowlers_economy.json", JSON.stringify(iplModule.getBowlersEconomyForYear(matchesJson, deliveriesJson, '2015'), undefined, 2))
+                writeJSONFile("data/bowlers_economy.json", JSON.stringify(iplModule.getBowlersEconomyForYear(matchesJson, deliveriesJson, '2015'), undefined, 2))
             })
     })
 
