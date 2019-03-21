@@ -15,8 +15,70 @@ fetch("http://127.0.0.1:5500/data/number_of_matches.json")
 fetch("http://127.0.0.1:5500/data/matches_won_per_team.json")
     .then((response) => response.json())
     .then((data) => matchesWonPerTeam = data)
+    .then(() => {
+        let dataObj = []
+        for (let key in matchesWonPerTeam) {
+            for (let year = 2008; year < 2018; year++) {
+                if (!Object.keys(matchesWonPerTeam[key]).includes(year.toString(10))) {
+                    matchesWonPerTeam[key][year.toString(10)] = 0;
+                }
+            }
+        }
+        for (let key in matchesWonPerTeam) {
+            dataObj.push({ name: key, data: Object.values(matchesWonPerTeam[key]) })
+        }
+        console.log(dataObj)
 
 
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('dom loaded')
+
+            Highcharts.chart('matches-won', {
+
+                title: {
+                    text: 'Matches won per team per year in all years of IPL'
+                },
+                yAxis: {
+                    title: {
+                        text: 'Number of matches won'
+                    }
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle'
+                },
+
+                plotOptions: {
+                    series: {
+                        label: {
+                            connectorAllowed: false
+                        },
+                        pointStart: 2008
+                    }
+                },
+
+                series: dataObj,
+
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth: 500
+                        },
+                        chartOptions: {
+                            legend: {
+                                layout: 'horizontal',
+                                align: 'center',
+                                verticalAlign: 'bottom'
+                            }
+                        }
+                    }]
+                }
+
+            })
+        })
+
+    })
 
 
 fetch("http://127.0.0.1:5500/data/extra_runs_per_team.json")
